@@ -1,0 +1,42 @@
+# EPDP — Class-conditional diffusion (Stomach) hyperparameters.
+# Consumed by `scripts/train_diffusion.py`. Dataset / output paths are CLI
+# args (`--data-root`, `--output-dir`); see `docs/DATA_FORMAT.md`.
+
+class_list: [STNT, STMX, STIN, STDI]   # 4 subtypes (Laurén)
+
+image_size: 1024
+inch: 3
+outch: 3
+
+modch: 128
+chmul: [1, 2, 4, 4, 4]
+numres: 2
+cdim: 256
+useconv: false
+droprate: 0.1
+
+T: 1000
+beta_schedule: linear
+w: 1.8
+v: 0.3
+threshold: 0.1
+
+# Lower LR than breast because stomach training was less stable in our runs.
+lr: 1.0e-5
+beta1: 0.5
+beta2: 0.999
+weight_decay: 1.0e-6
+batch_size: 1
+epochs: 1000
+multiplier: 1
+warm_epoch: 3
+exponential_gamma: 0.95
+amp: true
+
+ddim: true
+ddim_steps: 100
+ddim_eta: 0.0
+ddim_select: quadratic
+
+sample_every_epochs: 25
+save_every_epochs: 10

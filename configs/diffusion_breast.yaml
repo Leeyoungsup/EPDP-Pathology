@@ -1,0 +1,51 @@
+# EPDP — Class-conditional diffusion (Breast) hyperparameters.
+# Consumed by `scripts/train_diffusion.py`.
+#
+# The dataset / output / checkpoint paths are CLI args of the script
+# (`--data-root`, `--output-dir`, `--resume`) — NOT fields here — so the same
+# config is reusable across machines without edits. See `docs/DATA_FORMAT.md`
+# for the expected dataset folder layout.
+
+class_list: [BRNT, BRLC, BRIL, BRID, BRDC]   # 5 subtypes
+
+# ───── Image / sampling ─────────────────────────────────────────────
+image_size: 1024            # patch resolution (H = W)
+inch: 3                     # input channels (RGB)
+outch: 3                    # output (predicted noise) channels
+
+# ───── Denoising U-Net ──────────────────────────────────────────────
+modch: 128                  # base channel width
+chmul: [1, 2, 4, 4, 4]      # channel multipliers (5 levels → 4 down/up-samples)
+numres: 2                   # ResBlocks per level
+cdim: 256                   # class-embedding dimension
+useconv: false              # false → AvgPool downsample, true → strided Conv
+droprate: 0.1               # dropout in ResBlock
+
+# ───── DDPM ─────────────────────────────────────────────────────────
+T: 1000                     # diffusion timesteps
+beta_schedule: linear       # 0.0001 → 0.02 (Ho et al., 2020)
+w: 1.8                      # classifier-free guidance scale
+v: 0.3                      # posterior variance interpolation
+threshold: 0.1              # P(drop class label) for CFG training
+
+# ───── Optimization ────────────────────────────────────────────────
+lr: 5.0e-5
+beta1: 0.5                  # (recorded; AdamW uses default 0.9 in script)
+beta2: 0.999
+weight_decay: 1.0e-6
+batch_size: 1
+epochs: 1000
+multiplier: 1               # GradualWarmupScheduler multiplier
+warm_epoch: 3
+exponential_gamma: 0.95     # ExponentialLR after warmup
+amp: true                   # torch.cuda.amp mixed precision
+
+# ───── Sampling ────────────────────────────────────────────────────
+ddim: true                  # use DDIM at sampling time
+ddim_steps: 100
+ddim_eta: 0.0
+ddim_select: quadratic
+
+# ───── Logging cadence ─────────────────────────────────────────────
+sample_every_epochs: 25     # 0 disables periodic DDIM sampling
+save_every_epochs: 10       # 0 disables periodic checkpointing

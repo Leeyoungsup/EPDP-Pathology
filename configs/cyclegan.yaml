@@ -1,0 +1,38 @@
+# EPDP — Reference-guided CycleGAN for stain normalization.
+# Two-stage training:
+#   Stage 1 — unpaired:  Dataset A  ↔  Dataset B
+#   Stage 2 — pseudo-paired:  Dataset B (masked)  ↔  Dataset B̂
+# (See `notebooks/color_normalization_pipeline.ipynb`.)
+
+batch_size: 1
+input_size: 1024
+resize_scale: 1024
+crop_size: 1024
+fliplr: false
+
+num_epochs: 100
+decay_epoch: 50             # linear LR decay starts at this epoch
+
+# ── Generator (ResNet) ───────────────────────────────────────────
+ngf: 32                     # base channel width (informational)
+num_resnet: 9               # residual blocks per generator (manuscript-aligned)
+
+# ── Discriminator (PatchGAN) ─────────────────────────────────────
+ndf: 64
+
+# ── Optimization (Adam) ──────────────────────────────────────────
+lrG: 0.0002
+lrD: 0.0002
+beta1: 0.5
+beta2: 0.999
+
+# ── Loss weights ────────────────────────────────────────────────
+lambdaA: 10                 # cycle consistency (A → B → Â)
+lambdaB: 10                 # cycle consistency (B → A → B̂)
+style_weight: 1.0e4         # VGG16 perceptual / style loss
+image_pool_size: 10         # Shrivastava-style fake history pool
+
+# ── Reference image selection (Dataset A) ────────────────────────
+histogram_correlation_threshold: 0.9
+white_region_std_threshold: 5      # px-std under which a region is "white"
+n_reference_images: 10

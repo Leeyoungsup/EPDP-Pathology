@@ -1,0 +1,41 @@
+name: epdp
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - torch==2.3.1+cu121
+      - torchvision==0.18.1+cu121
+      - torchaudio==2.3.1+cu121
+      - --extra-index-url https://download.pytorch.org/whl/cu121
+      # Generative / training stack
+      - timm==0.9.7
+      - efficientnet-pytorch==0.7.1
+      - segmentation-models-pytorch==0.3.4
+      - pytorch-model-summary==0.1.2
+      - torchinfo==1.8.0
+      - torchmetrics
+      - torcheval==0.0.7
+      # Image I/O
+      - pillow==10.4.0
+      - opencv-python==4.10.0.84
+      - scikit-image
+      # Evaluation metrics
+      - pytorch-fid
+      - lpips
+      # Numeric / utility
+      - numpy==2.1.0
+      - scipy==1.14.1
+      - pandas==2.2.2
+      - scikit-learn==1.5.1
+      - tqdm==4.66.5
+      - matplotlib==3.9.2
+      - pyyaml==6.0.2
+      - transformers
+      - huggingface-hub==0.24.6
+      # Notebook tooling (optional)
+      - jupyter
+      - ipykernel
+      - ipywidgets==8.1.5
